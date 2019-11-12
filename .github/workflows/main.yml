@@ -21,10 +21,11 @@ jobs:
           github-repository: ${{ github.repository }}
       - name: Pre-remote commit actions
         run: |
-          git add README.md package.json
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -m "[skip-log, auto] Make changes automatically to meta files."
+          git add README.md package.json && \
+            git config --local user.email "action@github.com" && \
+            git config --local user.name "GitHub Action" && \
+            git commit -m "[skip-log, auto] Make changes automatically to meta files." || \
+            echo "No need to change any files."
       - uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
