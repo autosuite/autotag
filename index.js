@@ -34,6 +34,14 @@ function createMilestone(milestone) {
     const owner = ownerRepo.split("/")[0];
     const repo = ownerRepo.split("/")[1];
 
+    if (!owner || !repo) {
+        console.error("github-repository was not set as a correct input.");
+
+        process.exit(1);
+    }
+
+    console.log("Attempting to create milestone [" + milestone + "] for owner: " + owner + " and repo: " + repo);
+
     octokit.issues.createMilestone({
         owner,
         repo,
@@ -68,7 +76,7 @@ exec('git log -1 --pretty=format:"%s"', (err, stdout, _) => {
                 ")\\d\\.\\d\\.\\d", "g"));
 
             if (!milestoneToCreate) {
-                console.error("Message after prefix [" + cleanedPrefix +"] does not match SemVer.");
+                console.error("Message after prefix [" + cleanedPrefix + "] does not match SemVer.");
 
                 process.exit(1);
             }
