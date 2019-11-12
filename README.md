@@ -1,24 +1,26 @@
-# template
+# Automilestone
 
 ![Release Usability](https://img.shields.io/static/v1?label=stability&message=unusable&style=flat-square&color=red)
 ![Latest Release](https://img.shields.io/github/v/release/GH_USER/GH_REPO?sort=semver&style=flat-square)
 ![GitHub issues](https://img.shields.io/github/issues-raw/GH_USER/GH_REPO?style=flat-square)
 
-Base template for all repositories without a better template.
+## Introduction
 
-## Rationale
+Whenever a commit is tagged with a prefix and then a SemVer milestone, a new milestone is created with the SemVer version found.
 
-> See the [features document](FEATURES.md) for more specific information about the purpose of this software.
+For example: `[pre-1.0.1] blah` will create the `1.0.1` milestone if the prefix is `pre-` (default).
 
-Describe the "why" of your GitHub project here.
+## Usage
 
-## Build Instructions
+Add this action to your workflow using:
 
-Describe exactly how to build this project from scratch. Keep in mind platform-specific instructions.
-
-## Deploy
-
-Describe at least how _you_ are deploying this project so you can do it again.
+```yaml
+- using: teaminkling/automilestone@master
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github-repository: ${{ github.repository }}
+    prefix: pre-
+```
 
 ## Documentation
 
@@ -27,10 +29,3 @@ If you would like to contribute to this project, please read our [contributors d
 The license we use for this project is defined in [the license file](LICENSE).
 
 Thanks!
-
-## To-Do
-
-- [ ] **Check the license!**
-- [ ] Finish/edit this README file.
-- [ ] Add/edit any and all badges associated with this project.
-- [ ] Ensure your repository/account/organisation is connected to [Sheilds.io](https://shields.io/).

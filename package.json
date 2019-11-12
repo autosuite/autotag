@@ -1,0 +1,27 @@
+{
+  "name": "automilestone",
+  "version": "0.0.0",
+  "description": "GitHub Action to automatically create milestones from commit messages.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teaminkling/automilestone.git"
+  },
+  "keywords": [
+    "github",
+    "action"
+  ],
+  "author": "Inkling Interactive",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/teaminkling/automilestone/issues"
+  },
+  "homepage": "https://github.com/teaminkling/automilestone#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@octokit/rest": "^16.35.0"
+  }
+}

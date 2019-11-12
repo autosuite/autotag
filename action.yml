@@ -1,0 +1,20 @@
+name: automilestone
+description: Allows creation of milestones from commit messages.
+author: Inkling Interactive
+branding:
+  icon: zap
+  color: white
+inputs:
+  prefix:
+    required: true
+    default: pre-
+    description: The prefix to use to detect the name of the SemVer milestone to be created.
+  github-token:
+    required: true
+    description: The GitHub OAuth token used to authenticate with the API.
+  github-repository:
+    description: 'The GitHub repository in the form user-or-org/project.'
+    required: true
+runs:
+  using: node12
+  main: index.js
