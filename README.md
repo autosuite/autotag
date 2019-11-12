@@ -15,6 +15,8 @@ For example: `[pre-1.0.1] blah` will create the `1.0.1` milestone if the prefix 
 
 Add this action to your workflow using:
 
+> Note that the `prefix` configuration is optional and defaults to `pre-`.
+
 ```yaml
 name: my-workflow
 
@@ -32,6 +34,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-repository: ${{ github.repository }}
+          prefix: pre-
 ```
 
 ## Documentation
