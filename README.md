@@ -15,11 +15,22 @@ For example: `[pre-1.0.1] blah` will create the `1.0.1` milestone if the prefix 
 Add this action to your workflow using:
 
 ```yaml
-- using: teaminkling/automilestone@master
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    github-repository: ${{ github.repository }}
-    prefix: pre-
+name: my-workflow
+
+on: [push]
+
+jobs:
+  autocommit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: teaminkling/skip-commit@master
+        with:
+          commit-filter: skip-ci
+      - uses: teaminkling/automilestone@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-repository: ${{ github.repository }}
 ```
 
 ## Documentation
