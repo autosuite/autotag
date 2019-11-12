@@ -1,8 +1,9 @@
 # Automilestone
 
-![Release Usability](https://img.shields.io/static/v1?label=stability&message=unusable&style=flat-square&color=red)
-![Latest Release](https://img.shields.io/github/v/release/GH_USER/GH_REPO?sort=semver&style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues-raw/GH_USER/GH_REPO?style=flat-square)
+![Autobadger Release Stability](https://img.shields.io/static/v1?label=stability&message=unusable&style=flat-square&color=red)
+![Autobadger Latest Release](https://img.shields.io/static/v1?label=latest&message=0.0.0&style=flat-square&color=purple)
+
+[_What are these badges?_](https://github.com/teaminkling/autobadger/tree/master/BADGES.md)
 
 ## Introduction
 
@@ -15,11 +16,22 @@ For example: `[pre-1.0.1] blah` will create the `1.0.1` milestone if the prefix 
 Add this action to your workflow using:
 
 ```yaml
-- using: teaminkling/automilestone@master
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    github-repository: ${{ github.repository }}
-    prefix: pre-
+name: my-workflow
+
+on: [push]
+
+jobs:
+  autocommit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: teaminkling/skip-commit@master
+        with:
+          commit-filter: skip-ci
+      - uses: teaminkling/automilestone@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-repository: ${{ github.repository }}
 ```
 
 ## Documentation
