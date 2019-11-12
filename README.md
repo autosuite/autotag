@@ -1,7 +1,8 @@
 # Automilestone
 
-![Autobadger Release Stability](https://img.shields.io/static/v1?label=stability&message=prerelease&style=flat-square&color=yellow)
-![Autobadger Latest Release](https://img.shields.io/static/v1?label=latest&message=0.1.0&style=flat-square&color=purple)
+![Autobadger Release Stability](https://img.shields.io/static/v1?label=stability&message=unusable&style=flat-square&color=red)
+![Autobadger Latest Release](https://img.shields.io/static/v1?label=latest&message=0.0.0&style=flat-square&color=purple)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bc49f95e55bc499a90ac399534b3bc75)](https://www.codacy.com/gh/autosuite/automilestone?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=autosuite/automilestone&amp;utm_campaign=Badge_Grade)
 
 [_What are these badges?_](https://github.com/teaminkling/autobadger/tree/master/BADGES.md)
 
