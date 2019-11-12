@@ -69,7 +69,7 @@ exec('git log -1 --pretty=format:"%s"', (err, stdout, _) => {
 
         console.log("Prefix is: \"" + cleanedPrefix + "\".")
 
-        if (lastCommitLog.includes(cleanedPrefix) || 1) {
+        if (lastCommitLog.includes(cleanedPrefix)) {
             /* Extract the SemVer milestone. */
 
             const milestoneToCreate = lastCommitLog.match(new RegExp("(?<=" + cleanedPrefix +
