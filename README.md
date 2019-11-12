@@ -1,8 +1,9 @@
 # Automilestone
 
-![Release Usability](https://img.shields.io/static/v1?label=stability&message=unusable&style=flat-square&color=red)
-![Latest Release](https://img.shields.io/github/v/release/GH_USER/GH_REPO?sort=semver&style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues-raw/GH_USER/GH_REPO?style=flat-square)
+![Autobadger Release Stability](https://img.shields.io/static/v1?label=stability&message=unusable&style=flat-square&color=red)
+![Autobadger Latest Release](https://img.shields.io/static/v1?label=latest&message=0.0.0&style=flat-square&color=purple)
+
+[_What are these badges?_](https://github.com/teaminkling/autobadger/tree/master/BADGES.md)
 
 ## Introduction
 
