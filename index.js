@@ -57,7 +57,7 @@ exec('git log -1 --pretty=format:"%s"', (err, stdout, _) => {
 
         console.log("Last commit log was: " + lastCommitLog);
 
-        const prefix = core.getInput('prefix') || 'pre-';
+        const prefix = core.getInput('prefix');
 
         if (!prefix || prefix == "") {
             console.error("You need a prefix!");
@@ -72,7 +72,7 @@ exec('git log -1 --pretty=format:"%s"', (err, stdout, _) => {
         if (lastCommitLog.includes(cleanedPrefix) || 1) {
             /* Extract the SemVer milestone. */
 
-            const milestoneToCreate = "[pre-1.0.3] test blah".match(new RegExp("(?<=" + cleanedPrefix +
+            const milestoneToCreate = lastCommitLog.match(new RegExp("(?<=" + cleanedPrefix +
                 ")\\d\\.\\d\\.\\d", "g"));
 
             if (!milestoneToCreate) {
