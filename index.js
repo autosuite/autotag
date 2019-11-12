@@ -43,9 +43,9 @@ function createMilestone(milestone) {
     console.log("Attempting to create milestone [" + milestone + "] for owner: " + owner + " and repo: " + repo);
 
     octokit.issues.createMilestone({
-        owner,
-        repo,
-        milestone
+        "owner": owner,
+        "repo": repo,
+        "title": milestone
     });
 }
 
