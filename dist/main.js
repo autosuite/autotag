@@ -85,7 +85,7 @@ function run() {
                         }
                         if (commitMessage.includes(prefix)) {
                             /* Read the prefix. It can have a v in front, or not. */
-                            var milestone = commitMessage.match(new RegExp("(?<=" + prefix + ")v?\\d\\d\\d, \"g\")"));
+                            var milestone = commitMessage.match(new RegExp("(?<=" + prefix + ")v?\\d\\d\\d, \"g\""));
                             if (!milestone) {
                                 core.setFailed("The message after your prefix: " + prefix + ", is not SemVer.");
                             }
