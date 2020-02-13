@@ -1,6 +1,6 @@
 {
   "name": "automilestone",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "GitHub Action to automatically create milestones from commit messages.",
   "main": "index.js",
   "scripts": {
