@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0](https://github.com/autosuite/automilestone/tree/1.1.0) (2020-02-13)
+## [1.1.0](https://github.com/autosuite/automilestone/tree/1.1.0) (2020-02-14)
 
 [Full Changelog](https://github.com/autosuite/automilestone/compare/1.0.0...1.1.0)
 
