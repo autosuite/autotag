@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
-import * as exec from '@actions/exec';
 import * as github from '@actions/github';
+
+import * as autolib from 'autolib';
 
 /**
  * Use the GitHub API to create a milestone.
@@ -19,40 +20,32 @@ async function createMilestone(milestone: string): Promise<void> {
     }
 
     new github.GitHub(core.getInput("github-token")).issues.createMilestone({
-        "owner": owner,
-        "repo": repo,
-        "title": milestone
+        "owner": owner, "repo": repo, "title": milestone,
     });
 }
 
 async function run() {
-    exec.exec('git log -1 --pretty=%B', [], {
-        listeners: {
-            stdout: (data: Buffer) => {
-                const commitMessage: string = data.toString().trim();
-                core.info(`Last commit we saw: ${commitMessage}`);
+    const latestStableVersion: autolib.SemVer = await autolib.findLatestVersionFromGitTags(true);
 
-                const prefix: string = core.getInput('prefix').trim();
-                if (!prefix || prefix == "") {
-                    core.setFailed("You need a prefix! Check your inputs.");
-                }
+    /* Create next three logical versions. Overwriting is impossible. */
 
-                if (commitMessage.includes(prefix)) {
-                    /* Read the prefix. It can have a v in front, or not. */
+    const nextPatchVersion: autolib.SemVer = new autolib.SemVer(
+        latestStableVersion.major, latestStableVersion.minor, latestStableVersion.patch + 1, null
+    );
 
-                    const milestone: RegExpMatchArray | null = commitMessage.match(new RegExp(
-                        `(?<=${prefix})v?\\d\\d\\d, "g"`
-                    ));
+    createMilestone(nextPatchVersion.toString());
 
-                    if (!milestone) {
-                        core.setFailed(`The message after your prefix: ${prefix}, is not SemVer.`);
-                    } else {
-                        createMilestone(milestone[0]);
-                    }
-                }
-            }
-        }
-    })
+    const nextMinorVersion: autolib.SemVer = new autolib.SemVer(
+        latestStableVersion.major, latestStableVersion.minor + 1, latestStableVersion.patch, null
+    );
+
+    createMilestone(nextMinorVersion.toString());
+
+    const nextMajorVersion: autolib.SemVer = new autolib.SemVer(
+        latestStableVersion.major + 1, latestStableVersion.minor, latestStableVersion.patch, null
+    );
+
+    createMilestone(nextMajorVersion.toString());
 }
 
 run();

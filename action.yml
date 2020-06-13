@@ -5,10 +5,6 @@ branding:
   icon: zap
   color: white
 inputs:
-  prefix:
-    required: true
-    default: pre-
-    description: The prefix to use to detect the name of the SemVer milestone to be created.
   github-token:
     required: true
     description: The GitHub OAuth token used to authenticate with the API.
