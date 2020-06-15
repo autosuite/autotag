@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 
-import * as autolib from 'autolib';
+import * as autolib from '@teaminkling/autolib';
 
 /**
  * Use the GitHub API to create a milestone.

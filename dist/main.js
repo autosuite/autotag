@@ -44,8 +44,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core = __importStar(require("@actions/core"));
-var exec = __importStar(require("@actions/exec"));
 var github = __importStar(require("@actions/github"));
+var autolib = __importStar(require("@teaminkling/autolib"));
 /**
  * Use the GitHub API to create a milestone.
  *
@@ -63,9 +63,7 @@ function createMilestone(milestone) {
                 core.setFailed("github-repository was not set as a correct input! We got: " + ownerRepo);
             }
             new github.GitHub(core.getInput("github-token")).issues.createMilestone({
-                "owner": owner,
-                "repo": repo,
-                "title": milestone
+                "owner": owner, "repo": repo, "title": milestone,
             });
             return [2 /*return*/];
         });
@@ -73,30 +71,20 @@ function createMilestone(milestone) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function () {
+        var latestStableVersion, nextPatchVersion, nextMinorVersion, nextMajorVersion;
         return __generator(this, function (_a) {
-            exec.exec('git log -1 --pretty=%B', [], {
-                listeners: {
-                    stdout: function (data) {
-                        var commitMessage = data.toString().trim();
-                        core.info("Last commit we saw: " + commitMessage);
-                        var prefix = core.getInput('prefix').trim();
-                        if (!prefix || prefix == "") {
-                            core.setFailed("You need a prefix! Check your inputs.");
-                        }
-                        if (commitMessage.includes(prefix)) {
-                            /* Read the prefix. It can have a v in front, or not. */
-                            var milestone = commitMessage.match(new RegExp("(?<=" + prefix + ")v?\\d\\d\\d, \"g\""));
-                            if (!milestone) {
-                                core.setFailed("The message after your prefix: " + prefix + ", is not SemVer.");
-                            }
-                            else {
-                                createMilestone(milestone[0]);
-                            }
-                        }
-                    }
-                }
-            });
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, autolib.findLatestVersionFromGitTags(true)];
+                case 1:
+                    latestStableVersion = _a.sent();
+                    nextPatchVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor, latestStableVersion.patch + 1, null);
+                    createMilestone(nextPatchVersion.toString());
+                    nextMinorVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor + 1, latestStableVersion.patch, null);
+                    createMilestone(nextMinorVersion.toString());
+                    nextMajorVersion = new autolib.SemVer(latestStableVersion.major + 1, latestStableVersion.minor, latestStableVersion.patch, null);
+                    createMilestone(nextMajorVersion.toString());
+                    return [2 /*return*/];
+            }
         });
     });
 }
