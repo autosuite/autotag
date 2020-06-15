@@ -27,6 +27,8 @@ async function createMilestone(milestone: string): Promise<void> {
 async function run() {
     const latestStableVersion: autolib.SemVer = await autolib.findLatestVersionFromGitTags(true);
 
+    core.info(`Latest stable version found is: [${latestStableVersion}].`);
+
     /* Create next three logical versions. Don't allow 0.0.1. Overwriting is impossible. */
 
     if (!latestStableVersion.isZero()) {

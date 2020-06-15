@@ -77,6 +77,7 @@ function run() {
                 case 0: return [4 /*yield*/, autolib.findLatestVersionFromGitTags(true)];
                 case 1:
                     latestStableVersion = _a.sent();
+                    core.info("Latest stable version found is: [" + latestStableVersion + "].");
                     /* Create next three logical versions. Don't allow 0.0.1. Overwriting is impossible. */
                     if (!latestStableVersion.isZero()) {
                         createMilestone(latestStableVersion.toString());
