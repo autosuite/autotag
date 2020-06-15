@@ -27,13 +27,17 @@ async function createMilestone(milestone: string): Promise<void> {
 async function run() {
     const latestStableVersion: autolib.SemVer = await autolib.findLatestVersionFromGitTags(true);
 
-    /* Create next three logical versions. Overwriting is impossible. */
+    /* Create next three logical versions. Don't allow 0.0.1. Overwriting is impossible. */
 
-    const nextPatchVersion: autolib.SemVer = new autolib.SemVer(
-        latestStableVersion.major, latestStableVersion.minor, latestStableVersion.patch + 1, null
-    );
+    if (!latestStableVersion.isZero()) {
+        createMilestone(latestStableVersion.toString());
 
-    createMilestone(nextPatchVersion.toString());
+        const nextPatchVersion: autolib.SemVer = new autolib.SemVer(
+            latestStableVersion.major, latestStableVersion.minor, latestStableVersion.patch + 1, null
+        );
+
+        createMilestone(nextPatchVersion.toString());
+    }
 
     const nextMinorVersion: autolib.SemVer = new autolib.SemVer(
         latestStableVersion.major, latestStableVersion.minor + 1, latestStableVersion.patch, null

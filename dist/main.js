@@ -77,8 +77,12 @@ function run() {
                 case 0: return [4 /*yield*/, autolib.findLatestVersionFromGitTags(true)];
                 case 1:
                     latestStableVersion = _a.sent();
-                    nextPatchVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor, latestStableVersion.patch + 1, null);
-                    createMilestone(nextPatchVersion.toString());
+                    /* Create next three logical versions. Don't allow 0.0.1. Overwriting is impossible. */
+                    if (!latestStableVersion.isZero()) {
+                        createMilestone(latestStableVersion.toString());
+                        nextPatchVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor, latestStableVersion.patch + 1, null);
+                        createMilestone(nextPatchVersion.toString());
+                    }
                     nextMinorVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor + 1, latestStableVersion.patch, null);
                     createMilestone(nextMinorVersion.toString());
                     nextMajorVersion = new autolib.SemVer(latestStableVersion.major + 1, latestStableVersion.minor, latestStableVersion.patch, null);
