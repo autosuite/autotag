@@ -42,14 +42,12 @@ async function run() {
     }
 
     const nextMinorVersion: autolib.SemVer = new autolib.SemVer(
-        latestStableVersion.major, latestStableVersion.minor + 1, latestStableVersion.patch, null
+        latestStableVersion.major, latestStableVersion.minor + 1, 0, null
     );
 
     createMilestone(nextMinorVersion.toString());
 
-    const nextMajorVersion: autolib.SemVer = new autolib.SemVer(
-        latestStableVersion.major + 1, latestStableVersion.minor, latestStableVersion.patch, null
-    );
+    const nextMajorVersion: autolib.SemVer = new autolib.SemVer(latestStableVersion.major + 1, 0, 0, null);
 
     createMilestone(nextMajorVersion.toString());
 }

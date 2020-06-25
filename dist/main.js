@@ -84,9 +84,9 @@ function run() {
                         nextPatchVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor, latestStableVersion.patch + 1, null);
                         createMilestone(nextPatchVersion.toString());
                     }
-                    nextMinorVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor + 1, latestStableVersion.patch, null);
+                    nextMinorVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor + 1, 0, null);
                     createMilestone(nextMinorVersion.toString());
-                    nextMajorVersion = new autolib.SemVer(latestStableVersion.major + 1, latestStableVersion.minor, latestStableVersion.patch, null);
+                    nextMajorVersion = new autolib.SemVer(latestStableVersion.major + 1, 0, 0, null);
                     createMilestone(nextMajorVersion.toString());
                     return [2 /*return*/];
             }
