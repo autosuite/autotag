@@ -1,17 +1,36 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 
+import incrementVersion from "semver/functions/inc";
+import versionLessThanEquals from "semver/functions/lte";
+
 import * as autolib from '@teaminkling/autolib';
+
 
 /**
  * Use the GitHub API to create a milestone.
  *
- * @param {String} milestone the milestone name to create
+ * Note that we are assuming creating a milestone when it already exists is not a problem.
+ *
+ * @param milestone The milestone name to create.
+ * @param owner The owner of the repo (account name).
+ * @param repo The repo name.
  */
-async function createMilestone(milestone: string): Promise<void> {
+async function createMilestone(milestone: string, owner: string, repo: string): Promise<void> {
     core.info(`Milestone we want to create will be: ${milestone}.`);
 
+    const token: string = core.getInput("github-token");
+    await new github.GitHub(token).issues.createMilestone({
+        "owner": owner, "repo": repo, "title": milestone,
+    });
+}
+
+
+async function runAction() {
+    /* Check repo info is good. */
+
     const ownerRepo: string = core.getInput('github-repository');
+
     const owner: string = ownerRepo.split("/")[0];
     const repo: string = ownerRepo.split("/")[1];
 
@@ -19,37 +38,39 @@ async function createMilestone(milestone: string): Promise<void> {
         core.setFailed(`github-repository was not set as a correct input! We got: ${ownerRepo}`);
     }
 
-    new github.GitHub(core.getInput("github-token")).issues.createMilestone({
-        "owner": owner, "repo": repo, "title": milestone,
-    });
-}
+    /* Find the latest version. */
 
-async function run() {
-    const latestStableVersion: autolib.SemVer = await autolib.findLatestVersionFromGitTags(true);
+    const latestStableVersion: string = await autolib.findLatestVersionFromGitTags(true);
 
     core.info(`Latest stable version found is: [${latestStableVersion}].`);
 
-    /* Create next three logical versions. Don't allow 0.0.1. Overwriting is impossible. */
+    /* Create next three logical versions. Don't allow 0.0.1. */
 
-    if (!latestStableVersion.isZero()) {
-        createMilestone(latestStableVersion.toString());
+    if (!versionLessThanEquals(latestStableVersion, "0.0.1")) {
+        /* Ensure the current latest tagged version is correctly milestoned. */
 
-        const nextPatchVersion: autolib.SemVer = new autolib.SemVer(
-            latestStableVersion.major, latestStableVersion.minor, latestStableVersion.patch + 1, null
-        );
+        await createMilestone(latestStableVersion, owner, repo);
 
-        createMilestone(nextPatchVersion.toString());
+        /* Find the next patch version, then increment. */
+
+        const nextPatchVersion: string = incrementVersion(latestStableVersion, "patch")!;
+        await createMilestone(nextPatchVersion, owner, repo);
     }
 
-    const nextMinorVersion: autolib.SemVer = new autolib.SemVer(
-        latestStableVersion.major, latestStableVersion.minor + 1, 0, null
-    );
+    /* Find the next minor version, then increment. */
 
-    createMilestone(nextMinorVersion.toString());
+    const nextMinorVersion: string = incrementVersion(latestStableVersion, "minor")!;
+    await createMilestone(nextMinorVersion, owner, repo);
 
-    const nextMajorVersion: autolib.SemVer = new autolib.SemVer(latestStableVersion.major + 1, 0, 0, null);
+    /* Find the next major version, then increment. */
 
-    createMilestone(nextMajorVersion.toString());
+    const nextMajorVersion: string = incrementVersion(latestStableVersion, "major")!;
+    await createMilestone(nextMajorVersion, owner, repo);
 }
 
-run();
+
+const actionRunner: Promise<void> = runAction();
+
+/* Handle action promise. */
+
+actionRunner.then(() => {});

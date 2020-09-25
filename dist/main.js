@@ -42,55 +42,83 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var core = __importStar(require("@actions/core"));
 var github = __importStar(require("@actions/github"));
+var inc_1 = __importDefault(require("semver/functions/inc"));
+var lte_1 = __importDefault(require("semver/functions/lte"));
 var autolib = __importStar(require("@teaminkling/autolib"));
 /**
  * Use the GitHub API to create a milestone.
  *
- * @param {String} milestone the milestone name to create
+ * Note that we are assuming creating a milestone when it already exists is not a problem.
+ *
+ * @param milestone The milestone name to create.
+ * @param owner The owner of the repo (account name).
+ * @param repo The repo name.
  */
-function createMilestone(milestone) {
+function createMilestone(milestone, owner, repo) {
     return __awaiter(this, void 0, void 0, function () {
-        var ownerRepo, owner, repo;
-        return __generator(this, function (_a) {
-            core.info("Milestone we want to create will be: " + milestone + ".");
-            ownerRepo = core.getInput('github-repository');
-            owner = ownerRepo.split("/")[0];
-            repo = ownerRepo.split("/")[1];
-            if (!owner || !repo) {
-                core.setFailed("github-repository was not set as a correct input! We got: " + ownerRepo);
-            }
-            new github.GitHub(core.getInput("github-token")).issues.createMilestone({
-                "owner": owner, "repo": repo, "title": milestone,
-            });
-            return [2 /*return*/];
-        });
-    });
-}
-function run() {
-    return __awaiter(this, void 0, void 0, function () {
-        var latestStableVersion, nextPatchVersion, nextMinorVersion, nextMajorVersion;
+        var token;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, autolib.findLatestVersionFromGitTags(true)];
+                case 0:
+                    core.info("Milestone we want to create will be: " + milestone + ".");
+                    token = core.getInput("github-token");
+                    return [4 /*yield*/, new github.GitHub(token).issues.createMilestone({
+                            "owner": owner, "repo": repo, "title": milestone,
+                        })];
                 case 1:
-                    latestStableVersion = _a.sent();
-                    core.info("Latest stable version found is: [" + latestStableVersion + "].");
-                    /* Create next three logical versions. Don't allow 0.0.1. Overwriting is impossible. */
-                    if (!latestStableVersion.isZero()) {
-                        createMilestone(latestStableVersion.toString());
-                        nextPatchVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor, latestStableVersion.patch + 1, null);
-                        createMilestone(nextPatchVersion.toString());
-                    }
-                    nextMinorVersion = new autolib.SemVer(latestStableVersion.major, latestStableVersion.minor + 1, 0, null);
-                    createMilestone(nextMinorVersion.toString());
-                    nextMajorVersion = new autolib.SemVer(latestStableVersion.major + 1, 0, 0, null);
-                    createMilestone(nextMajorVersion.toString());
+                    _a.sent();
                     return [2 /*return*/];
             }
         });
     });
 }
-run();
+function runAction() {
+    return __awaiter(this, void 0, void 0, function () {
+        var ownerRepo, owner, repo, latestStableVersion, nextPatchVersion, nextMinorVersion, nextMajorVersion;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    ownerRepo = core.getInput('github-repository');
+                    owner = ownerRepo.split("/")[0];
+                    repo = ownerRepo.split("/")[1];
+                    if (!owner || !repo) {
+                        core.setFailed("github-repository was not set as a correct input! We got: " + ownerRepo);
+                    }
+                    return [4 /*yield*/, autolib.findLatestVersionFromGitTags(true)];
+                case 1:
+                    latestStableVersion = _a.sent();
+                    core.info("Latest stable version found is: [" + latestStableVersion + "].");
+                    if (!!lte_1.default(latestStableVersion, "0.0.1")) return [3 /*break*/, 4];
+                    /* Ensure the current latest tagged version is correctly milestoned. */
+                    return [4 /*yield*/, createMilestone(latestStableVersion, owner, repo)];
+                case 2:
+                    /* Ensure the current latest tagged version is correctly milestoned. */
+                    _a.sent();
+                    nextPatchVersion = inc_1.default(latestStableVersion, "patch");
+                    return [4 /*yield*/, createMilestone(nextPatchVersion, owner, repo)];
+                case 3:
+                    _a.sent();
+                    _a.label = 4;
+                case 4:
+                    nextMinorVersion = inc_1.default(latestStableVersion, "minor");
+                    return [4 /*yield*/, createMilestone(nextMinorVersion, owner, repo)];
+                case 5:
+                    _a.sent();
+                    nextMajorVersion = inc_1.default(latestStableVersion, "major");
+                    return [4 /*yield*/, createMilestone(nextMajorVersion, owner, repo)];
+                case 6:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+var actionRunner = runAction();
+/* Handle action promise. */
+actionRunner.then(function () { });
